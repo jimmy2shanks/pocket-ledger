@@ -1,43 +1,27 @@
-# Pocket Ledger v1
+# Pocket Ledger v3 — iPhone finance tracker
 
-A private manual-entry budget tracker designed for iPhone as a Progressive Web App (PWA). No bank access, accounts, backend, analytics, or subscriptions.
+Offline-capable, privacy-first budgeting app with manual income/expense entry. No bank integration, logins, subscriptions or servers for financial data.
 
-## Features
-- Record income and expenses; edit entries
-- Split one expense across multiple categories (split amounts must equal total)
-- Monthly income, expenses, net cash flow, and category breakdown
-- Search and filter transactions
-- Export/import JSON backups
-- Local browser storage and offline app shell via service worker
+## What is new in v3
+- Pie/doughnut chart of **actual spending** by category, including split category purchases.
+- Side-by-side bar charts for the **last 12 months** and **last 5 calendar years**, showing recorded income and spending separately.
+- Recurring expenses (weekly, every two weeks, monthly, quarterly, yearly), subscriptions and recurring paycheck schedules. Log an actual payment separately.
+- **Set-aside budget** for active quarterly and yearly bills. Shows amount per month and approximate biweekly paycheck allocation. Quarterly cost/3 and annual cost/12, rounded up to a cent. These are *targets only* and do not move money or track an actual savings fund. First upcoming bill may require accelerated savings if you have not already set money aside.
+- Existing features: income and expenses, categories and split transactions, transaction editing, search, subscription totals, JSON backup/restore.
 
-## Test on Windows
-1. Unzip the package.
-2. Open a terminal in the `pocket-ledger` folder.
-3. Run `python -m http.server 8000` (Python required).
-4. Visit `http://localhost:8000` in a browser.
+## Updating your existing GitHub Pages site
+1. In the iPhone app open Settings > Export backup and save the JSON in iCloud Drive. Verify it appears in Files. Do not upload financial backup files to your public GitHub repository.
+2. Unzip `pocket-ledger-v3.zip` on your Windows computer.
+3. Open the existing `jimmy2shanks/pocket-ledger` GitHub repo. From its root choose **Add file > Upload files**.
+4. Drag **the seven extracted files individually from INSIDE the `pocket-ledger-v3` folder**, not the folder or ZIP. `index.html` must be in repository root.
+5. GitHub will prompt to replace conflicting files. Commit the changes to `main`. Keep Pages set to `main` and `/(root)`.
+6. After Pages completes deployment, load https://jimmy2shanks.github.io/pocket-ledger/ while online. Close and reopen the installed iPhone web app to pick up the updated version. If cached content lingers, retry while online; do NOT delete/reinstall the app or clear Safari website data without a verified backup.
+7. Add a fake quarterly water bill and yearly car insurance bill in the Recurring tab; view their monthly saving targets. Check the overview charts with test transactions. Test airplane mode again.
 
-To test actual offline installation, publish on HTTPS. Opening `index.html` directly may not enable offline caching.
+The existing local-storage key and schema are retained so updating the code **should not overwrite existing transactions**. Backup export is v3; v1/v2/v3 exports can be restored. Because iPhone web app/browser storage is device-local and subject to deletion, always export to a private iCloud Drive location before updates or after substantial data entry.
 
-## Publish once so your iPhone does not depend on your PC
-1. Create or sign in to a GitHub account at https://github.com.
-2. Make a new public repository, e.g. `pocket-ledger`.
-3. Upload the FILES *inside* this folder (`index.html`, `app.js`, `sw.js`, `manifest.webmanifest`, `icon-192.png`, `icon-512.png`) to the repository root. Do not upload the ZIP in place of its contents.
-4. Under your repository **Settings > Pages**, set **Source: Deploy from a branch**, branch **main**, folder **/(root)**, and save.
-5. GitHub will show the published site URL, usually `https://YOUR-USERNAME.github.io/pocket-ledger/`.
-6. On iPhone, open that HTTPS URL in **Safari**, then Share > Add to Home Screen, enable **Open as Web App**, and tap Add.
-7. Launch the installed app at least once while connected. Then try airplane mode to confirm that it starts offline. Your PC can be turned off throughout.
+### Important accounting details
+The spending charts count *recorded expenses*, not scheduled recurring obligations or recommended set-asides. Logging a recurring payment adds it to actual expenses. The set-aside suggestion is informational only, not a dedicated funded account; it does not subtract from take-home pay. The recurring cash-flow forecast is approximate and may overlap if you also manually record future bills.
 
-**Privacy**: On GitHub Free, repository SOURCE CODE is public. No financial records are put in the repo, and the app has no server-side storage. Transaction records remain in the browser storage of the device used. Do not upload JSON backups to the public repository.
-
-**Backups**: In the installed app, go to Settings > Export backup and save the JSON file somewhere private using the iPhone share/download flow. Repeat regularly, especially before app upgrades or changing phones. Deleting the web app, clearing website data or iOS storage cleanup can erase records. Imported backups replace existing entries.
-
-**Note**: Records entered in PC and iPhone browser/app are not automatically synchronized. An installed iPhone web app may use storage separate from Safari; enter your real records in the installed app and keep backups.
-
-## Updating the app
-Replace the published code files and bump the `CACHE` value in `sw.js` (for example, `pocket-ledger-app-v2`) for the new app shell. The device may need an online reload for updates. Always export a backup first.
-
-## Known boundaries
-- Monthly summary only includes recorded transactions; it does not know a bank balance.
-- Recurring bills, receipt scanning, item-by-item scanner recognition, and syncing are not implemented yet.
-- Only one device's data at a time; local storage may be cleared by the OS/browser.
-- No encryption at rest beyond any security afforded by the phone/device itself.
+### Development
+Run `python -m http.server 8000` in the unzipped directory and open `http://localhost:8000`. The service worker caches files after you first load them successfully on HTTPS. No external JS dependencies, no telemetry.
